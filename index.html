@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classifying data with a quantum kernel</title>
+<meta name="description" content="A basic use case of quantum computing for machine learning: a support vector machine whose kernel is computed by a two-qubit circuit. Slides and a live demo.">
+<meta property="og:title" content="Classifying data with a quantum kernel">
+<meta property="og:description" content="Ten slides and a live demo of a quantum kernel classifier, simulated in the browser.">
+<meta property="og:image" content="https://zanyanbu.github.io/quantum-kernel-classifier/assets/slides/slide-01.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#"><span class="dot"></span>Quantum kernel classifier</a>
+  <nav>
+    <a href="#demo">Demo</a>
+    <a href="#slides">Slides</a>
+    <a href="#how">How it works</a>
+    <a href="https://github.com/ZANYANBU/quantum-kernel-classifier">Code</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Quantum Machine Learning · course presentation</p>
+      <h1>Classifying data with a quantum kernel</h1>
+      <p class="lead">A support vector machine cannot split two rings with a straight line. Let a two-qubit circuit measure how similar each pair of points is, and the same algorithm draws the right boundary.</p>
+      <div class="actions">
+        <a class="btn primary" href="Quantum-Kernel-Classifier.pptx" download>Download the slides (.pptx)</a>
+        <a class="btn" href="Quantum-Kernel-Classifier.pdf">PDF</a>
+        <a class="btn" href="#demo">Try the demo</a>
+      </div>
+    </div>
+    <ul class="stats">
+      <li><strong>2</strong><span>qubits</span></li>
+      <li><strong>60% → 97.5%</strong><span>test accuracy, straight line vs quantum kernel</span></li>
+      <li><strong>3,160</strong><span>circuit pairs for 80 training points</span></li>
+    </ul>
+  </section>
+
+  <section id="demo" class="panel">
+    <h2>Live demo</h2>
+    <p class="sub">Everything below runs in this page. The two-qubit circuit is simulated exactly, so there is no noise.</p>
+    <div class="demo">
+      <div class="plot">
+        <canvas id="plot" width="640" height="640" aria-label="Data points and the regions the classifier assigns to each class"></canvas>
+        <div class="legend">
+          <span><i class="a"></i>Class A</span>
+          <span><i class="b"></i>Class B</span>
+          <span><i class="t"></i>Test point</span>
+          <span><i class="w"></i>Wrong</span>
+        </div>
+      </div>
+      <div class="controls">
+        <fieldset>
+          <legend>Data</legend>
+          <div class="seg" id="data">
+            <button data-v="circles" class="on">Two rings</button>
+            <button data-v="moons">Two moons</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Kernel</legend>
+          <div class="seg col" id="kernel">
+            <button data-v="linear">Linear, classical</button>
+            <button data-v="q1">Quantum, 1 layer</button>
+            <button data-v="q2" class="on">Quantum, 2 layers</button>
+            <button data-v="rbf">RBF, classical</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Noise <output id="noiseOut">0.06</output></legend>
+          <input id="noise" type="range" min="0" max="0.2" step="0.01" value="0.06">
+        </fieldset>
+        <button id="again" class="btn">New random data</button>
+        <dl class="readout">
+          <div><dt>Training accuracy</dt><dd id="trainAcc">–</dd></div>
+          <div><dt>Test accuracy</dt><dd id="testAcc">–</dd></div>
+          <div><dt>Support vectors</dt><dd id="sv">–</dd></div>
+          <div><dt>Circuit pairs</dt><dd id="pairs">–</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="slides" class="panel">
+    <h2>The slides</h2>
+    <p class="sub">Ten slides. Use the arrow keys or the buttons.</p>
+    <div class="viewer">
+      <img id="slide" src="assets/slides/slide-01.jpg" alt="Slide 1 of 10" width="1300" height="731">
+      <div class="bar">
+        <button id="prev" class="btn" aria-label="Previous slide">←</button>
+        <span id="count">1 / 10</span>
+        <button id="next" class="btn" aria-label="Next slide">→</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="panel">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><span>1</span><h3>Encode</h3><p>A circuit of Hadamard, phase and ZZ gates turns a point's two features into a two-qubit state.</p></li>
+      <li><span>2</span><h3>Compare</h3><p>Encode one point, undo the encoding of another, and measure. The chance of reading 00 is the similarity of the pair.</p></li>
+      <li><span>3</span><h3>Train</h3><p>Fill a matrix with those similarities and give it to an ordinary support vector machine.</p></li>
+    </ol>
+    <p class="note">This example does not show a quantum advantage. A classical RBF kernel does as well or better on these toy datasets, and two qubits are trivial to simulate. It shows the method.</p>
+    <p class="note">The numbers on the slides come from <code>experiment.js</code> in the repository and can be reproduced with <code>node experiment.js</code>.</p>
+  </section>
+</main>
+
+<footer>
+  <span>V. Anbuchelvan · SRM Institute of Science and Technology</span>
+  <a href="https://github.com/ZANYANBU/quantum-kernel-classifier">github.com/ZANYANBU/quantum-kernel-classifier</a>
+</footer>
+
+<script src="qkernel.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
